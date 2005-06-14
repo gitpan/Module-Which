@@ -1,0 +1,9 @@
+Revision history for Perl extension Module::Which.
+
+0.01  Tue Jun 14
+        - first release to CPAN
+
+0.01  Tue Jun 14 14:58:05 2005
+	- original version; created by h2xs 1.23 with options
+		-AX -n Module::Which
+

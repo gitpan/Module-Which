@@ -1,0 +1,52 @@
+Module-Which version 0.01
+=========================
+
+C<Module::Which> is the basis of the script C<which_pm> intented
+to show which version of a Perl module is installed (if it is there at all).
+
+Modules are searched by name (like 'YAML') or by subcategories
+('DBD::*' means all modules under the DBD subdirectories of
+your Perl installation, matching both 'DBD::Oracle' and 'DBD::ODBC::Changes').
+
+This module is very simple and most won't need it.
+But it has been instructive for the author to see how many broken modules
+one can find under your Perl installation (some which don't accept
+even a 'require' statement), modules with no version number and
+documentation files (named '.pm') which do not return a true value.
+
+To find out modules under subcategories, L<Module::Find> by Christian
+Renz was used.
+
+Well, all that said, this module is no more than automating:
+
+  perl -MModule::I::Want::To::Know::About -e "print $Module::I::Want::To::Know::About::VERSION"
+
+or better the one-liner
+
+  perl -e '$pm = shift; eval "require $pm"; print ${"${pm}::VERSION"}' DBI
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+  Module::Find
+
+COPYRIGHT AND LICENCE
+
+Put the correct copyright and licence information here.
+
+Copyright (C) 2005 by Adriano R. Ferreira
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+
