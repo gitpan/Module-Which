@@ -2,6 +2,13 @@
 use 5.005;
 use ExtUtils::MakeMaker;
 
+if ($] < 5.006) {
+	print "Downgrading source code from 5.006 to 5.005\n";
+	use lib qw(inc);
+	use Module::Downgrade;
+	downgrade('lib/Module/Which.pm', 'bin/which_pm.PL');
+}
+
 WriteMakefile(
     NAME              => 'Module::Which',
     VERSION_FROM      => 'lib/Module/Which.pm', # finds $VERSION

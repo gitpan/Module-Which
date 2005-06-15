@@ -11,8 +11,8 @@ require Module::Which;
 require File::Spec;
 
 is_deeply($info,
-	{ 
-	'Module::Find' => { version => $Module::Find::VERSION },
-	'Module::Which' => { version => $Module::Which::VERSION },
-	'File::Spec' => { version => $File::Spec::VERSION },
-	}, "very simple test is ok");
+	[ 
+	{ version => $Module::Find::VERSION, pm => 'Module::Find' },
+	{ version => $Module::Which::VERSION, pm => 'Module::Which' },
+	{ version => $File::Spec::VERSION, pm => 'File::Spec' },
+	], "very simple test is ok");

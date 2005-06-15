@@ -1,7 +1,7 @@
-Module-Which version 0.01
+Module-Which version 0.02
 =========================
 
-C<Module::Which> is the basis of the script C<which_pm> intented
+'Module::Which' is the basis of the script 'which_pm' intented
 to show which version of a Perl module is installed (if it is there at all).
 
 Modules are searched by name (like 'YAML') or by subcategories
@@ -39,6 +39,27 @@ DEPENDENCIES
 This module requires these other modules and libraries:
 
   Module::Find
+
+TO DO
+
+* which_pm should produce a nicer output for long module names.
+
+* introduce options to control C<which_pm> behavior: like C<--verbose>, 
+  C<--quiet>, C<--include>, C<--method>, etc.
+
+* needs a more comprehensive test suite.
+
+* implement more options on which() behavior
+
+  return => 'ARRAY' | 'HASH' | 'HASH(FIRST)' | 'HASH(MULT)' | 'HASH(LIST)'
+  verbose => 0 | 1
+
+  include => @INC
+  method => 'REQUIRE' | 'EXTRACT'
+  info   => @fields
+
+* include the file path in the information about a Perl module
+
 
 COPYRIGHT AND LICENCE
 

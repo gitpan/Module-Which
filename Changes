@@ -1,5 +1,16 @@
 Revision history for Perl extension Module::Which.
 
+0.00_01 Tue Jun 15
+        - experimental code to downgrade the source
+	  code to 5.005
+	- which_pm is not verbose by default anymore:
+	  set environment variable WHICH_PM_VERBOSE 
+        - options to customize which() behavior:
+	  'return' and 'verbose'
+        - which() now returns an array ref by default
+	  and optionally a hash ref
+        - added reference to existing CPAN modules 
+
 0.01  Tue Jun 14
         - first release to CPAN
 
