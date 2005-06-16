@@ -1,5 +1,13 @@
 Revision history for Perl extension Module::Which.
 
+0.00_02 Tue Jun 16
+        - options '--verbose' and '--quiet' supported by now
+	- use of Getopt::Long and Pod::Usage in which_pm.pl
+	- bug in Module::Which documented
+	- test script for Data::Hash::Transform: "t/002hash.t"
+        - code for converting from an array of hashes to hash of hashes
+	  moved to Data::Hash::Transform
+
 0.00_01 Tue Jun 15
         - experimental code to downgrade the source
 	  code to 5.005

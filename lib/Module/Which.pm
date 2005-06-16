@@ -11,11 +11,10 @@ our @ISA = qw(Exporter);
 #our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(which);
 
-our $VERSION = '0.01_01';
+our $VERSION = '0.01_02';
 
 use Module::Find;
-
-#our $VERBOSE = 1;
+use Data::Hash::Transform qw(hash_em);
 
 #sub pm_require {
 #	my $pm = shift;
@@ -43,7 +42,6 @@ sub pm_info {
 		if ($@ =~ /^Can't locate/) {
 			$version = undef 
 		} else {
-			#warn "'require $pm' failed: $@" if $VERBOSE;
 			warn "'require $pm' failed: $@" if $options->{verbose};
 			$version = 'unknown';
 		}
@@ -62,6 +60,16 @@ sub expand_wildcard {
 	$wildcard =~ s/::\*$//;
 	return findallmod $wildcard;
 }
+
+# turns an array of hashes to a hash of hashes
+sub hashify (\@$) {
+	my ($ary, $opt_meth) = @_;
+	our %meth = ( 'HASH' => 'f', 'HASH(FIRST)' => 'f', 'HASH(MULTI)' => 'm', 'HASH(LIST)' => 'a' );
+	my $meth = $meth{$opt_meth}
+		or die "hash strategy '$opt_meth' unknown";
+	return hash_em($ary, 'pm', $meth);
+}
+
 
 # which(@pm)
 # which(@pm, $options) where $options is a hash ref
@@ -82,68 +90,8 @@ sub which {
 	}
 	return \@info if $options->{return} eq 'ARRAY';
 
-	return hash($options->{return}, @info);
-}
-
-# private
-sub hash {
-	my $strategy = shift;
-	if ($strategy =~ /^HASH(\(FIRST\))?$/) {
-		return hash_first(@_);
-	} elsif ($strategy eq 'HASH\(MULTI\)') {
-		return hash_multi(@_);
-	} elsif ($strategy eq 'HASH\(LIST\)') {
-		return hash_list(@_);
-	} else {
-		die "strategy '$strategy' unknown";
-	}
-}
-
-# private
-# $hashref = to_hash(@array)
-# turns the array created by which() to a hash ref
-# using the value at $_->{pm} as key
-#
-# strategy: first wins
-sub hash_first {
-	my %hash;
-	for (@_) {
-		my $k = $_->{pm};
-		$hash{$k} = $_ unless $hash{$k};
-	}
-	return \%hash;
-}
-
-# strategy: values turn to array ref if needed (multiple values at same key)
-sub hash_multi {
-	my %hash;
-	for (@_) {
-		my $k = $_->{pm};
-		if ($hash{$k}) {
-			if (ref $hash{$k} eq 'ARRAY') {
-				push @{$hash{$k}}, $_;
-			} else {
-				$hash{$k} = [ $hash{$k}, $_ ];
-			}
-		} else {
-			$hash{$k} = $_;
-		}
-	}
-	return \%hash;
-}
-
-# strategy: every value is an array ref (single value or multiple values at a key)
-sub hash_list {
-	my %hash;
-	for (@_) {
-		my $k = $_->{pm};
-		if ($hash{$k}) {
-			push @{$hash{$k}}, $_;
-		} else {
-			$hash{$k} = [ $_ ];
-		}
-	}
-	return \%hash;
+	#return hash($options->{return}, @info);
+	return hashify(@info, $options->{return});
 }
 
 1;
@@ -181,7 +129,7 @@ Renz was used.
 
 Well, all that said, this module is no more than automating:
 
-  perl -MModule::I::Want::To::Know::About -e "print $Module::I::Want::To::Know::About::VERSION"
+  perl -MInteresting::Module -e "print $Interesting::Module::VERSION"
 
 or better the one-liner
 
@@ -249,6 +197,11 @@ the modules to find
 out their versions, but extract them via regexes) and does not
 has a command-line interface which was the main thrust of this
 distribution. I have been studying the others too.
+
+=head1 BUGS
+
+(1) Actually one can't find multiple installed versions of a module
+when non-pattern argument is used.
 
 Please report bugs via CPAN RT L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Which>.
 

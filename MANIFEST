@@ -3,7 +3,9 @@ Makefile.PL
 MANIFEST
 README
 t/Module-Which.t
+t/002hash.t                              Tests Data::Hash::Transform
 lib/Module/Which.pm
+lib/Data/Hash/Transform.pm               Turns array of hashes to hash of hashes
 bin/which_pm.PL
 inc/Module/Downgrade.pm
 META.yml                                 Module meta-data (added by MakeMaker)
