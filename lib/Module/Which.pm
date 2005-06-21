@@ -11,7 +11,7 @@ our @ISA = qw(Exporter);
 #our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(which);
 
-our $VERSION = '0.01_02';
+our $VERSION = '0.01_03';
 
 use Module::Find;
 use Data::Hash::Transform qw(hash_em);
@@ -129,7 +129,7 @@ Renz was used.
 
 Well, all that said, this module is no more than automating:
 
-  perl -MInteresting::Module -e "print $Interesting::Module::VERSION"
+  perl -MInteresting::Module -e 'print $Interesting::Module::VERSION'
 
 or better the one-liner
 

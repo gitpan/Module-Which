@@ -76,8 +76,6 @@ It depends entirely on the generosity of the code being translated.
 
 Don't use it. It is not ready for general use.
 
-=back
-
 =head2 EXPORT
 
 C<downgrade> is exported by default.

@@ -1,5 +1,17 @@
 Revision history for Perl extension Module::Which.
 
+0.00_03 Tue Jun 21
+        - improved a bit the output of 'which_pm' by finding
+	  out the maximum length of a module name before printing
+        - temporarily, "META.yml" will not be automatically
+	  updated by MakeMaker (so that the correct license
+	  is set)
+        - "bin/which_pm.PL" renamed to "bin/which_pm"
+        - added "t/003pod.t" to test POD for errors 
+	  (when Test::Pod 1.00 is there)
+        - completed documentation of Data::Hash::Transform
+	  which was truncated and buggy
+
 0.00_02 Tue Jun 16
         - options '--verbose' and '--quiet' supported by now
 	- use of Getopt::Long and Pod::Usage in which_pm.pl

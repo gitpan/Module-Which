@@ -9,18 +9,19 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(hash_f hash_l hash_m hash_a hash_em);
 
-our $VERSION = 0.00_03;
+our $VERSION = 0.00_04;
 
 use Carp qw(croak);
 
-=head1 TITLE
+=head1 NAME
 
 Data::Hash::Transform - Turns array of hashes to hash of hashes in predefined ways
 
 =head1 SYNOPSIS
 
   use Data::Hash::Transform qw(hash_f hash_l hash_m hash_a hash_em);
-  my $loh = [ { k => 1, n => 'one' }, { k => 2, n => 'two' } ];
+
+  my $loh = [ { k => 1, n => 'one' }, { k => 2, n => 'two' }, { k => 1, n => 'ein' } ];
   $hoh1 = hash_f($loh, 'k'); # keep first
   $hoh2 = hash_l($loh, 'k'); # keep last
   $hoh3 = hash_m($loh, 'k'); # keep a list (if needed)
@@ -74,18 +75,23 @@ keep the last
 keep a list in the case of collisions
 
   { 1 => [ { k => 1, n => 'one' }, { k => 1, n => 'ein' } ],
-    2 => [ { k => 2, n => 'two' } ] }
+    2 => { k => 2, n => 'two' } }
 
 =item *
 
 always keep a list (for the case of collisions)
 
   { 1 => [ { k => 1, n => 'one' }, { k => 1, n => 'ein' } ],
-    2 => { k => 2, n => 'two' } }
+    2 => [ { k => 2, n => 'two' } ] }
 
 =back
 
 That is exactly what we implement here.
+
+=head2 EXPORT
+
+None by default. C<hash_f>, C<hash_l>, C<hash_m>, C<hash_a>,
+C<hash_em> can be exported on demand.
 
 =cut
 
@@ -247,6 +253,25 @@ at runtime. I think the code would be slightly harder to maintain
 and perfomance may suffer. But this is just guessing.
 Soon I will write such an implementation and a benchmark
 to make sure it is worth to use this code as it is.
+
+=for comment
+=head1 SEE ALSO
+
+=head1 BUGS
+
+Please report bugs via CPAN RT L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Which>.
+
+=head1 AUTHOR
+
+Adriano R. Ferreira, E<lt>ferreira@cpan.orgE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2005 by Adriano R. Ferreira
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
 
 =cut
 

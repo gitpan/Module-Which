@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.01_02';
+our $VERSION = '0.01_03';
 
 use Module::Which;
 use Getopt::Long;
@@ -32,15 +32,40 @@ GetOptions(
 pod2usage(-exitstatus => 1, -verbose => 1) if $which_options{help};
 pod2usage(-exitstatus => 0, -verbose => 2) if $which_options{man};
 
-#use YAML; #$YAML::DumpCode = 1;
-#print Dump \%which_options;
+#sub get_term_width {
+#	return 200 unless -t STDOUT; 
+#	eval { require Term::ReadKey };
+#	return 80 if ($@); 
+#	my @size = Term::ReadKey::GetTerminalSize(*STDOUT);
+#	print "size: @size\n";
+#	return shift @size;
+#}
+
+sub out_info {
+	my $info = shift;
+	my $pm_len = 0;
+	for (@$info) {
+		$pm_len = length($_->{pm}) if $pm_len < length($_->{pm});
+	}
+	return { pm_len => $pm_len }
+}
+
+sub print_pm {
+	my $pm_info = shift;
+	my $out_info = shift;
+	$pm_info->{version} = "(not found)" unless defined $pm_info->{version};
+	my $pm_len = $out_info->{pm_len};
+	printf "%-${pm_len}s $pm_info->{version}\n", $pm_info->{pm};
+}
 
 my $info = which(@ARGV, \%which_options);
 
+my $out_info = out_info($info);
 for (@$info) {
-	my $pm_info = $_;
-	$pm_info->{version} = "(not found)" unless defined $pm_info->{version};
-	printf "%-20s $pm_info->{version}\n", $pm_info->{pm};
+	print_pm($_, $out_info);
+#	my $pm_info = $_;
+#	$pm_info->{version} = "(not found)" unless defined $pm_info->{version};
+#	printf "%-20s $pm_info->{version}\n", $pm_info->{pm};
 }
 
 

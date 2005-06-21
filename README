@@ -19,7 +19,7 @@ Renz was used.
 
 Well, all that said, this module is no more than automating:
 
-  perl -MModule::I::Want::To::Know::About -e "print $Module::I::Want::To::Know::About::VERSION"
+  perl -MInteresting::Module -e 'print $Interesting::Module'
 
 or better the one-liner
 
@@ -42,8 +42,6 @@ This module requires these other modules and libraries:
 
 TO DO
 
-* which_pm should produce a nicer output for long module names.
-
 * needs a more comprehensive test suite.
 
 * implement more options on which() behavior
@@ -63,6 +61,12 @@ TO DO
 * fix bug in --help option
 * introduce more options to control C<which_pm> behavior: C<--include>, 
   C<--method>, etc.
+
+* always update "META.yml" before releasing (this is not
+  being done automatically because MakeMaker overwrite
+  keys like 'license' and 'recommends')
+
+* which_pm should produce nice output for narrow terminal window sizes.
 
 COPYRIGHT AND LICENCE
 
