@@ -4,11 +4,17 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.01_03';
+our $VERSION = '0.01_04';
 
 use Module::Which;
 use Getopt::Long;
 use Pod::Usage;
+
+sub print_version {
+	use File::Basename qw(basename);
+	print "This is ", basename($0), ", $VERSION\n";
+	exit(0);
+}
 
 our $VERBOSE = 0 || $ENV{WHICH_PM_VERBOSE};
 
@@ -26,11 +32,13 @@ GetOptions(
 	#"include=s@"
 	"help",
 	"man",
+	"version",
 ) or pod2usage(2);
 
 #pod2usage(1) if $which_options{help};
 pod2usage(-exitstatus => 1, -verbose => 1) if $which_options{help};
 pod2usage(-exitstatus => 0, -verbose => 2) if $which_options{man};
+print_version if $which_options{version};
 
 #sub get_term_width {
 #	return 200 unless -t STDOUT; 
@@ -55,7 +63,11 @@ sub print_pm {
 	my $out_info = shift;
 	$pm_info->{version} = "(not found)" unless defined $pm_info->{version};
 	my $pm_len = $out_info->{pm_len};
-	printf "%-${pm_len}s $pm_info->{version}\n", $pm_info->{pm};
+	$pm_len = 20 if $pm_len < 20;
+	$pm_info->{path} = '' unless $pm_info->{path}; # for (not found) entries
+	my $w = 78 - $pm_len -10 -2;
+	printf "%-${pm_len}s %-10s %-${w}s\n", 
+		$pm_info->{pm}, $pm_info->{version}, substr($pm_info->{path}, 0, $w);
 }
 
 my $info = which(@ARGV, \%which_options);
@@ -78,17 +90,19 @@ which_pm - Perl script to find out which versions of certain Perl modules are in
 
 =head1 SYNOPSIS
 
-  which_pm [--verbose] [--quiet] DBI DBD::*
+  which_pm [--verbose] [--quiet] DBI DBD::
   which_pm --help
   which_pm --man
+  which_pm --version
 
-  which_pm Module::Find Module::Which File::*
+  which_pm Module::Find Module::Which File::
 
   Options:
     -verbose       shows error messages (due to "require $module")
     -quiet         hides error messages (due to "require $module")
     -help          brief help message
     -man           full documentation
+    -version       prints the version number of this script
 
 =head1 OPTIONS
 
@@ -113,6 +127,10 @@ Print a brief help message and exits.
 =item B<-man>
 
 Prints the manual page and exits.
+
+=item B<-version>
+
+Prints the version number and exits.
 
 =back
 

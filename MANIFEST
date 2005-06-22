@@ -2,10 +2,15 @@ Changes
 Makefile.PL
 MANIFEST
 README
-t/Module-Which.t
+t/001basic.t
 t/002hash.t                              Tests Data::Hash::Transform
 t/003pod.t                               Tests POD for errors
+t/tlib/A.pm                              Mock module for helping test
+t/tlib/A/AA.pm                           id
+t/tlib/A/AB.pm                           id
+t/tlib/X.pm                              id
 lib/Module/Which.pm
+lib/Module/Which/List.pm
 lib/Data/Hash/Transform.pm               Turns array of hashes to hash of hashes
 bin/which_pm
 inc/Module/Downgrade.pm

@@ -11,9 +11,12 @@ our @ISA = qw(Exporter);
 #our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(which);
 
-our $VERSION = '0.01_03';
+our $VERSION = '0.01_04';
 
-use Module::Find;
+#print "ENTERING Module::Which\n";
+
+#use Module::Find;
+use Module::Which::List qw(list_pm_files);
 use Data::Hash::Transform qw(hash_em);
 
 #sub pm_require {
@@ -34,32 +37,40 @@ sub pm_version {
 }
 
 sub pm_info {
-	my $pm = shift;
+	my $pm = shift; # --- { pm: (pm), path: (path), base: (base), }
 	my $options = shift;
-	eval "require $pm";
+	#eval { require $pm->{path} };
+	#print qq{XXXXX eval\n\t lib: $pm->{base}  $pm->{pm}\n"};
+	#eval "no warnings 'redefine'; use lib qw($pm->{base}); require $pm->{pm};";
+	eval "use lib qw($pm->{base}); require $pm->{pm};";
 	my $version;
 	if ($@) {
 		if ($@ =~ /^Can't locate/) {
 			$version = undef 
 		} else {
-			warn "'require $pm' failed: $@" if $options->{verbose};
+			warn "'require $pm->{pm}' failed: $@" if $options->{verbose};
 			$version = 'unknown';
 		}
 	} else {
-		$version = pm_version($pm) || 'undef';
+		$version = pm_version($pm->{pm}) || 'undef';
 	}
-	return { version => $version, pm => $pm  };
+	return { 
+		version => $version, 
+		pm => $pm->{pm}, 
+		path => $pm->{path}, 
+		base => $pm->{base}  
+	};
 }
 
-sub is_wildcard {
-	return shift =~ /::\*$/;
-}
+#sub is_wildcard {
+#	return shift =~ /::\*$/;
+#}
 
-sub expand_wildcard {
-	my $wildcard = shift;
-	$wildcard =~ s/::\*$//;
-	return findallmod $wildcard;
-}
+#sub expand_wildcard {
+#	my $wildcard = shift;
+#	$wildcard =~ s/::\*$//;
+#	return findallmod $wildcard;
+#}
 
 # turns an array of hashes to a hash of hashes
 sub hashify (\@$) {
@@ -82,15 +93,24 @@ sub which {
 
 	my @info;
 	for my $pm (@pm) {
-		if (is_wildcard($pm)) {
-			push @info, pm_info($_, $options) for expand_wildcard($pm);
+
+		#push @info, pm_info($_, $options) for list_pm_files($pm, recurse => 1);
+
+		my @pm_files = list_pm_files($pm, recurse => 1);
+		if (@pm_files) {
+			push @info, pm_info($_, $options) for @pm_files;
 		} else {
-			push @info, pm_info($pm, $options);
+			push @info, { pm => $pm };
 		}
+
+		#if (is_wildcard($pm)) {
+		#	push @info, pm_info($_, $options) for expand_wildcard($pm);
+		#} else {
+		#	push @info, pm_info($pm, $options);
+		#}
 	}
 	return \@info if $options->{return} eq 'ARRAY';
 
-	#return hash($options->{return}, @info);
 	return hashify(@info, $options->{return});
 }
 
@@ -104,7 +124,7 @@ Module::Which - Finds out which version of Perl modules are installed
 =head1 SYNOPSIS
 
   use Module::Which;
-  my $info = which('Module::Which', 'YAML', 'XML::*', 'DBI', 'DBD::*');
+  my $info = which('Module::Which', 'YAML', 'XML::', 'DBI', 'DBD::');
   while (my ($mod, $info) = each %$info) {
 	  print "$mod: $info->{version}\n"; 
   }
@@ -115,7 +135,7 @@ C<Module::Which> is the basis of the script C<which_pm> intented
 to show which version of a Perl module is installed (if it is there at all).
 
 Modules are searched by name (like 'YAML') or by subcategories
-('DBD::*' means all modules under the DBD subdirectories of
+('DBD::' means all modules under the DBD subdirectories of
 your Perl installation, matching both 'DBD::Oracle' and 'DBD::ODBC::Changes').
 
 This module is very simple and most won't need it.
@@ -124,6 +144,7 @@ one can find under your Perl installation (some which don't accept
 even a 'require' statement), modules with no version number and
 documentation files (named '.pm') which do not return a true value.
 
+=for comment
 To find out modules under subcategories, L<Module::Find> by Christian
 Renz was used.
 
@@ -184,6 +205,8 @@ C<which> is exported by default.
 =head1 SEE ALSO
 
 L<Module::Find> was my friend to implement this module as a breeze.
+But I have found some itches and wrote my own L<Module::Which::List>
+based on this and L<Module::List> by Andrew Main. 
 
 After releasing it into CPAN, I found
 
@@ -199,9 +222,6 @@ has a command-line interface which was the main thrust of this
 distribution. I have been studying the others too.
 
 =head1 BUGS
-
-(1) Actually one can't find multiple installed versions of a module
-when non-pattern argument is used.
 
 Please report bugs via CPAN RT L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Which>.
 

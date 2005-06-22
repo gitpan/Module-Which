@@ -1,11 +1,11 @@
-Module-Which version 0.01_03
+Module-Which version 0.01_04
 ============================
 
 'Module::Which' is the basis of the script 'which_pm' intented
 to show which version of a Perl module is installed (if it is there at all).
 
 Modules are searched by name (like 'YAML') or by subcategories
-('DBD::*' means all modules under the DBD subdirectories of
+('DBD::' means all modules under the DBD subdirectories of
 your Perl installation, matching both 'DBD::Oracle' and 'DBD::ODBC::Changes').
 
 This module is very simple and most won't need it.
@@ -38,7 +38,16 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-  Module::Find
+  GetOpt::Long
+  Pod::Usage
+  Test::More
+  File::Spec::Unix
+  File::Glob
+  File::Find
+
+and recommends
+
+  Test::Pod
 
 TO DO
 
@@ -53,7 +62,6 @@ TO DO
   method => 'REQUIRE' | 'EXTRACT'
   info   => @fields
 
-* include the file path in the information about a Perl module
 
 * finish documentation of Data::Hash::Transform
 * stuff Data::Hash::Transform into its own distribution
@@ -67,10 +75,15 @@ TO DO
   keys like 'license' and 'recommends')
 
 * which_pm should produce nice output for narrow terminal window sizes.
+* which_pm should be able to report the version of perl (and other Perl scripts)
+* a more complete implementation of --version for which_pm 
+  (copyright and license included)
+
+* support the pattern '' as a shortcut to show all installed modules
+  in include directories
+* finish documentation of Module::Which::List
 
 COPYRIGHT AND LICENCE
-
-Put the correct copyright and licence information here.
 
 Copyright (C) 2005 by Adriano R. Ferreira
 
