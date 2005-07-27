@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.01_04';
+our $VERSION = '0.01_05';
 
 use Module::Which;
 use Getopt::Long;
@@ -23,6 +23,8 @@ my %which_options;
 	return => 'ARRAY',
 	verbose => $VERBOSE,
 	quiet => sub { $which_options{verbose} = 0 },	
+	p5p => 0,
+	plain => sub { $which_options{p5p} = 0 },
 );
 
 GetOptions(
@@ -33,6 +35,8 @@ GetOptions(
 	"help",
 	"man",
 	"version",
+	"p5p!",
+	"plain"
 ) or pod2usage(2);
 
 #pod2usage(1) if $which_options{help};
@@ -58,7 +62,7 @@ sub out_info {
 	return { pm_len => $pm_len }
 }
 
-sub print_pm {
+sub print_pm_0 {
 	my $pm_info = shift;
 	my $out_info = shift;
 	$pm_info->{version} = "(not found)" unless defined $pm_info->{version};
@@ -70,17 +74,55 @@ sub print_pm {
 		$pm_info->{pm}, $pm_info->{version}, substr($pm_info->{path}, 0, $w);
 }
 
+my @used_ivars;
+
+sub print_pm {
+	my $pm_info = shift;
+	my $out_info = shift;
+	$pm_info->{version} = "(not found)" unless defined $pm_info->{version};
+	my $pm_len = $out_info->{pm_len};
+	$pm_len = 20 if $pm_len < 20;
+
+	use Module::Which::P5Path qw(path_to_p5);
+	my ($p5path, $p5base) = path_to_p5($pm_info->{path});
+
+	if ($p5path && $p5path =~ /^\$\{(\w+)\}/ ) {
+		push @used_ivars, $1 unless grep { $_ eq $1 } @used_ivars
+	}
+
+	#$pm_info->{p5base} = '' unless $pm_info->{p5base}; # for (not found) entries
+	if ($p5base) {
+		my $w = 78 - $pm_len -10 -5;
+		printf "%-${pm_len}s %-10s at %-${w}s\n", 
+			$pm_info->{pm}, $pm_info->{version}, substr($p5base, 0, $w);
+	} else { # for (not found) entries
+		printf "%-${pm_len}s %-10s\n", 
+			$pm_info->{pm}, $pm_info->{version};
+	}
+}
+
 my $info = which(@ARGV, \%which_options);
 
 my $out_info = out_info($info);
 for (@$info) {
-	print_pm($_, $out_info);
+	if ($which_options{p5p}) {
+		print_pm($_, $out_info) ;
+	} else {
+		print_pm_0($_, $out_info);
+	}
 #	my $pm_info = $_;
 #	$pm_info->{version} = "(not found)" unless defined $pm_info->{version};
 #	printf "%-20s $pm_info->{version}\n", $pm_info->{pm};
 }
 
-
+#if ($which_options{sym}) {
+if (@used_ivars) {
+	print "\nfrom Config:\n";
+	use Config;
+	for (@used_ivars) {
+		print "\t$_: $Config{$_}\n";
+	}
+}
 
 __END__
 
@@ -90,7 +132,7 @@ which_pm - Perl script to find out which versions of certain Perl modules are in
 
 =head1 SYNOPSIS
 
-  which_pm [--verbose] [--quiet] DBI DBD::
+  which_pm [--verbose] [--quiet] [--p5p] DBI DBD::
   which_pm --help
   which_pm --man
   which_pm --version
@@ -103,6 +145,9 @@ which_pm - Perl script to find out which versions of certain Perl modules are in
     -help          brief help message
     -man           full documentation
     -version       prints the version number of this script
+
+	-plain         print plain paths (default)
+	-p5p           prints p5-paths
 
 =head1 OPTIONS
 
@@ -117,7 +162,7 @@ In case, the statement fails, error messages are shown.
 
 Version is determined by doing a C<require> on runtime.
 In case, the statement fails, error messages are silently hidden.
-This is the default. A failure during C<require> will
+I<This is the default.> A failure during C<require> will
 result 'unknown' as version.
 
 =item B<-help>
@@ -131,6 +176,14 @@ Prints the manual page and exits.
 =item B<-version>
 
 Prints the version number and exits.
+
+=item B<-p5p>, B<-plain>
+
+Toogles on and off printing paths as p5-paths or plain paths.
+For example, in a machine where the Config variable C<installarchlib>
+holds C<"C:\tools\Perl5\lib"> and C<File::Spec> is found at
+C<"c:/tools/Perl5/lib/File/Spec.pm">, the p5-path is
+C<"${installarchlib}/">.
 
 =back
 

@@ -11,7 +11,7 @@ our @ISA = qw(Exporter);
 #our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(which);
 
-our $VERSION = '0.01_04';
+our $VERSION = '0.01_05';
 
 #print "ENTERING Module::Which\n";
 

@@ -10,7 +10,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(list_pm_files);
 
-our $VERSION = '0.01_04';
+our $VERSION = '0.01_05';
 
 use File::Glob qw(bsd_glob);
 #use File::Spec::Functions qw(abs2rel);
@@ -128,7 +128,7 @@ __END__
 
 =head1 NAME
 
-Module::Which::List - lists C<.pm> files under specified library paths
+Module::Which::List - Lists C<.pm> files under specified library paths
 
 =head1 SYNOPSIS
 

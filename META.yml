@@ -1,7 +1,7 @@
 ---
 # http://module-build.sourceforge.net/META-spec.html
 name:         Module-Which
-version:      0.01_04
+version:      0.01_05
 version_from: lib/Module/Which.pm
 author:
   - Adriano Ferreira <ferreira@cpan.org>
@@ -15,6 +15,9 @@ requires:
     File::Glob:                    0
 recommends:
     Test::Pod:                     1.18
+no_index:
+    file:
+        - inc/Module/Downgrade.pm
 installdirs:  site
 
 distribution_type: module
