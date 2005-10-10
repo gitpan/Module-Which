@@ -1,63 +1,69 @@
 Revision history for Perl extension Module::Which.
 
+0.02    Mon Oct 10 2005
+        - just the same as 0.01_05
+        - it's a shame: the only purpose of this
+          release it to raise my kwalitee to 16.0
+          as development versions aren't counted
+
 0.01_05 Tue Jun 24-? 2005
-        - added a "--sym" option to which_pm so that Config-related
-	  paths can be shown ????????
-	- wrote tests for the previously introduced modules
+        - added a "--p5p" option to which_pm so that Config-related
+          paths can be shown
+        - wrote tests for the previously introduced modules
         - wrote Module::Which::P5Path to make Config-related
-	  translations: like "/usr/lib/perl5/Module/Which.pm" to
-	  '${sitelib}/Module/Which.pm'
+          translations: like "/usr/lib/perl5/Module/Which.pm" to
+          '${sitelib}/Module/Which.pm'
 
 0.01_04 Tue Jun 21 2005
         - file path was include in the information about
-	  a Perl module 'which_pm' gives
+          a Perl module 'which_pm' gives
         - replaced "t/Module-Which.t" with "t/001basic.t"
-	  which uses the mock modules under "t/tlib" to test
-	- the bug of not being able to find multiple installed
-	  versions of a module with an exact pattern like 'YAML'
-	  is gone with the use of Module::Which::List
-	- subcategories are now written DBD:: instead of DBD::*
+          which uses the mock modules under "t/tlib" to test
+        - the bug of not being able to find multiple installed
+          versions of a module with an exact pattern like 'YAML'
+          is gone with the use of Module::Which::List
+        - subcategories are now written DBD:: instead of DBD::*
         - replaced Module::Find dependency by a new module
-	  Module::Which::List which allows me to recover
-	  the module path
+          Module::Which::List which allows me to recover
+          the module path
         - option --version reports a sensible program name with
-	  "basename($0)"
+          "basename($0)"
         - added --version option to which_pm with corresponding docs 
 
 0.01_03 Tue Jun 21 2005
         - improved a bit the output of 'which_pm' by finding
-	  out the maximum length of a module name before printing
+          out the maximum length of a module name before printing
         - temporarily, "META.yml" will not be automatically
-	  updated by MakeMaker (so that the correct license is set)
+          updated by MakeMaker (so that the correct license is set)
         - "bin/which_pm.PL" renamed to "bin/which_pm"
         - added "t/003pod.t" to test POD for errors 
-	  (when Test::Pod 1.00 is there)
+          (when Test::Pod 1.00 is there)
         - completed documentation of Data::Hash::Transform
-	  which was truncated and buggy
+          which was truncated and buggy
 
 0.01_02 Tue Jun 16 2005
         - options '--verbose' and '--quiet' supported by now
-	- use of Getopt::Long and Pod::Usage in which_pm.pl
-	- bug in Module::Which documented
-	- test script for Data::Hash::Transform: "t/002hash.t"
+        - use of Getopt::Long and Pod::Usage in which_pm.pl
+        - bug in Module::Which documented
+        - test script for Data::Hash::Transform: "t/002hash.t"
         - code for converting from an array of hashes to hash of hashes
-	  moved to Data::Hash::Transform
+          moved to Data::Hash::Transform
 
 0.01_01 Tue Jun 15 2005
         - experimental code to downgrade the source
-	  code to 5.005
-	- which_pm is not verbose by default anymore:
-	  set environment variable WHICH_PM_VERBOSE 
+          code to 5.005
+        - which_pm is not verbose by default anymore:
+          set environment variable WHICH_PM_VERBOSE 
         - options to customize which() behavior:
-	  'return' and 'verbose'
+          'return' and 'verbose'
         - which() now returns an array ref by default
-	  and optionally a hash ref
+          and optionally a hash ref
         - added reference to existing CPAN modules 
 
 0.01  Tue Jun 14 2005
         - first release to CPAN
 
 0.01  Tue Jun 14 14:58:05 2005
-	- original version; created by h2xs 1.23 with options
-		-AX -n Module::Which
+        - original version; created by h2xs 1.23 with options
+                -AX -n Module::Which
 
