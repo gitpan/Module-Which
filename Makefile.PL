@@ -23,6 +23,7 @@ WriteMakefile(
         File::Glob               => 0,
         File::Find               => 0,
         File::Spec               => 0.8,
+        String::Truncate         => 0,
     }, 
     EXE_FILES          => [ 'bin/which_pm' ],
     ($] >= 5.005 ?

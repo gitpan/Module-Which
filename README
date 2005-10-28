@@ -1,5 +1,5 @@
-Module-Which version 0.02
-=========================
+Module-Which version 0.02_01
+============================
 
 'Module::Which' is the basis of the script 'which_pm' intented
 to show which version of a Perl module is installed (if it is there at all).

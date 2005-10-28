@@ -11,7 +11,8 @@ our @ISA = qw(Exporter);
 #our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(which);
 
-our $VERSION = '0.02';
+our $VERSION = '0.02_01';
+eval $VERSION;
 
 #print "ENTERING Module::Which\n";
 
@@ -222,6 +223,17 @@ has a command-line interface which was the main thrust of this
 distribution. I have been studying the others too.
 
 =head1 BUGS
+
+Known bugs:
+
+=over 4
+
+=item *
+
+When a module is found twice or more in the library path,
+the version is the one of the first file.
+
+=back
 
 Please report bugs via CPAN RT L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Which>.
 
