@@ -11,7 +11,7 @@ our @ISA = qw(Exporter);
 #our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(which);
 
-our $VERSION = '0.02_01';
+our $VERSION = '0.02_02';
 eval $VERSION;
 
 #print "ENTERING Module::Which\n";
@@ -21,101 +21,113 @@ use Module::Which::List qw(list_pm_files);
 use Data::Hash::Transform qw(hash_em);
 
 #sub pm_require {
-#	my $pm = shift;
-#	my $verbose = shift;
-#	eval "require $pm";
-#	if ($@) { # error
-#		warn "'require $pm' failed: $@" if $verbose;
-#		return (0, $@);
-#	}
-#	return 1
+#    my $pm = shift;
+#    my $verbose = shift;
+#    eval "require $pm";
+#    if ($@) { # error
+#        warn "'require $pm' failed: $@" if $verbose;
+#        return (0, $@);
+#    }
+#    return 1
 #}
 
+#sub pm_version {
+#    my $pm = shift;
+#    no strict 'refs';
+#    return ${"${pm}::VERSION"};
+#}
+
+use ExtUtils::MakeMaker;
+
+=begin private
+
+=item B<pm_version>
+
+  $v = pm_version($pm);
+
+Parses a PM file and return what it thinks is $VERSION
+in this file. (Actually implemented with 
+C<use ExtUtils::MakeMaker; MM->parse_version($file)>.)
+C<$pm> is the filename (eg., F<lib/Data/Dumper.pm>).
+
+=end private
+
+=cut
 sub pm_version {
-	my $pm = shift;
-	no strict 'refs';
-	return ${"${pm}::VERSION"};
+    my $pm = shift;
+    my $v;
+    eval { $v = MM->parse_version($pm); };
+    return $@ ? undef : $v;
 }
 
 sub pm_info {
-	my $pm = shift; # --- { pm: (pm), path: (path), base: (base), }
-	my $options = shift;
-	#eval { require $pm->{path} };
-	#print qq{XXXXX eval\n\t lib: $pm->{base}  $pm->{pm}\n"};
-	#eval "no warnings 'redefine'; use lib qw($pm->{base}); require $pm->{pm};";
-	eval "use lib qw($pm->{base}); require $pm->{pm};";
-	my $version;
-	if ($@) {
-		if ($@ =~ /^Can't locate/) {
-			$version = undef 
-		} else {
-			warn "'require $pm->{pm}' failed: $@" if $options->{verbose};
-			$version = 'unknown';
-		}
-	} else {
-		$version = pm_version($pm->{pm}) || 'undef';
-	}
-	return { 
-		version => $version, 
-		pm => $pm->{pm}, 
-		path => $pm->{path}, 
-		base => $pm->{base}  
-	};
+    my $pm = shift; # --- { pm: (pm), path: (path), base: (base), }
+    my $options = shift;
+
+    my $version = pm_version($pm->{path});
+
+    return { 
+        version => $version, 
+        pm => $pm->{pm}, 
+        path => $pm->{path}, 
+        base => $pm->{base}  
+    };
 }
 
 #sub is_wildcard {
-#	return shift =~ /::\*$/;
+#    return shift =~ /::\*$/;
 #}
 
 #sub expand_wildcard {
-#	my $wildcard = shift;
-#	$wildcard =~ s/::\*$//;
-#	return findallmod $wildcard;
+#    my $wildcard = shift;
+#    $wildcard =~ s/::\*$//;
+#    return findallmod $wildcard;
 #}
 
 # turns an array of hashes to a hash of hashes
 sub hashify (\@$) {
-	my ($ary, $opt_meth) = @_;
-	our %meth = ( 'HASH' => 'f', 'HASH(FIRST)' => 'f', 'HASH(MULTI)' => 'm', 'HASH(LIST)' => 'a' );
-	my $meth = $meth{$opt_meth}
-		or die "hash strategy '$opt_meth' unknown";
-	return hash_em($ary, 'pm', $meth);
+    my ($ary, $opt_meth) = @_;
+    our %meth = ( 'HASH' => 'f', 'HASH(FIRST)' => 'f', 'HASH(MULTI)' => 'm', 'HASH(LIST)' => 'a' );
+    my $meth = $meth{$opt_meth}
+        or die "hash strategy '$opt_meth' unknown";
+    return hash_em($ary, 'pm', $meth);
 }
 
 
 # which(@pm)
 # which(@pm, $options) where $options is a hash ref
 sub which {
-	my $options = {};
-	$options = pop @_ if ref $_[-1];
-	$options->{return} = 'ARRAY' unless $options->{return};
+    my $options = {};
+    $options = pop @_ if ref $_[-1];
+    $options->{return} = 'ARRAY' unless $options->{return};
 
-	my @pm = @_;
+    my @pm = @_;
 
-	my @info;
-	for my $pm (@pm) {
+    my @info;
+    for my $pm (@pm) {
 
-		#push @info, pm_info($_, $options) for list_pm_files($pm, recurse => 1);
+        #push @info, pm_info($_, $options) for list_pm_files($pm, recurse => 1);
 
-		my @pm_files = list_pm_files($pm, recurse => 1);
-		if (@pm_files) {
-			push @info, pm_info($_, $options) for @pm_files;
-		} else {
-			push @info, { pm => $pm };
-		}
+        my @pm_files = list_pm_files($pm, recurse => 1);
+        if (@pm_files) {
+            push @info, pm_info($_, $options) for @pm_files;
+        } else {
+            push @info, { pm => $pm };
+        }
 
-		#if (is_wildcard($pm)) {
-		#	push @info, pm_info($_, $options) for expand_wildcard($pm);
-		#} else {
-		#	push @info, pm_info($pm, $options);
-		#}
-	}
-	return \@info if $options->{return} eq 'ARRAY';
+        #if (is_wildcard($pm)) {
+        #    push @info, pm_info($_, $options) for expand_wildcard($pm);
+        #} else {
+        #    push @info, pm_info($pm, $options);
+        #}
+    }
+    return \@info if $options->{return} eq 'ARRAY';
 
-	return hashify(@info, $options->{return});
+    return hashify(@info, $options->{return});
 }
 
 1;
+
 __END__
 
 =head1 NAME
@@ -127,7 +139,7 @@ Module::Which - Finds out which version of Perl modules are installed
   use Module::Which;
   my $info = which('Module::Which', 'YAML', 'XML::', 'DBI', 'DBD::');
   while (my ($mod, $info) = each %$info) {
-	  print "$mod: $info->{version}\n"; 
+      print "$mod: $info->{version}\n"; 
   }
 
 =head1 DESCRIPTION
@@ -211,10 +223,10 @@ based on this and L<Module::List> by Andrew Main.
 
 After releasing it into CPAN, I found
 
-	Module::InstalledVersion
-	Module::Info
-	Module::List
-	Module::Locate
+    Module::InstalledVersion
+    Module::Info
+    Module::List
+    Module::Locate
 
 Module::InstalledVersion has a different approach (it does not run 
 the modules to find

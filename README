@@ -1,4 +1,4 @@
-Module-Which version 0.02_01
+Module-Which version 0.02_02
 ============================
 
 'Module::Which' is the basis of the script 'which_pm' intented
@@ -44,6 +44,7 @@ This module requires these other modules and libraries:
   File::Spec::Unix
   File::Glob
   File::Find
+  ExtUtils::MakeMaker
 
 and recommends
 

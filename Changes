@@ -1,5 +1,9 @@
 Revision history for Perl extension Module::Which.
 
+0.02_02 Thu Dec  8 2005
+        - module versions are obtained via MM->parse_file
+          after using EE::MM
+
 0.02_01 Fri Oct 28 2005
         - now which_pm uses String::Truncate when file paths
           are too long (instead of simple truncate)

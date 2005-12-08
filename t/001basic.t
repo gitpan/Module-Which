@@ -7,6 +7,9 @@ my @pm = qw(A X A::AA A::AB);
 use lib qw(t/tlib);
 my $info = which(@pm);
 
+use YAML;
+#diag(YAML::Dump $info);
+
 is_deeply($info,  [ 
     { version => 1, pm => 'A', path => 't/tlib/A.pm', base => 't/tlib' },
     { version => 1, pm => 'X', path => 't/tlib/X.pm', base => 't/tlib' },
