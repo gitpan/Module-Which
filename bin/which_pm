@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.02_02';
+our $VERSION = '0.02_03';
 
 use Module::Which;
 use Getopt::Long;
@@ -17,6 +17,7 @@ sub print_version {
 }
 
 our $VERBOSE = 0 || $ENV{WHICH_PM_VERBOSE};
+our $WIDTH = 78; # the default terminal width
 
 my %which_options;
 %which_options = (
@@ -25,18 +26,21 @@ my %which_options;
     quiet => sub { $which_options{verbose} = 0 },    
     p5p => 0,
     plain => sub { $which_options{p5p} = 0 },
+    width => \$WIDTH, 
+
 );
 
 GetOptions(
     \%which_options,
     "verbose",
     "quiet",
-    #"include=s@"
+    "include=s@",
     "help",
     "man",
     "version",
     "p5p!",
-    "plain"
+    "plain",
+    "width=i"
 ) or pod2usage(2);
 
 #pod2usage(1) if $which_options{help};
@@ -66,7 +70,11 @@ sub _elide {
     require String::Truncate;
     my $str = shift;
     my $len = shift;
-    return String::Truncate::elide($str, $len, { truncate => 'right' });
+    if ($len>0) {
+        return String::Truncate::elide($str, $len, { truncate => 'right' });
+    } else {
+        return $str;
+    }
     #substr($str, 0, $len)
 }
 
@@ -77,9 +85,9 @@ sub print_pm_0 {
     my $pm_len = $out_info->{pm_len};
     $pm_len = 20 if $pm_len < 20;
     $pm_info->{path} = '' unless $pm_info->{path}; # for (not found) entries
-    my $w = 78 - $pm_len -10 -2;
+    my $w = $WIDTH - $pm_len -10 -2;
 
-    printf "%-${pm_len}s %-10s %-${w}s\n", 
+    printf "%-${pm_len}s %-10s %s\n", 
         $pm_info->{pm}, $pm_info->{version}, _elide($pm_info->{path}, $w);
 }
 
@@ -101,11 +109,11 @@ sub print_pm {
 
     #$pm_info->{p5base} = '' unless $pm_info->{p5base}; # for (not found) entries
     if ($p5base) {
-        my $w = 78 - $pm_len -10 -5;
-        printf "%-${pm_len}s %-10s at %-${w}s\n", 
+        my $w = $WIDTH - $pm_len -10 -5;
+        printf "%-${pm_len}s %-10s at %s\n", 
             $pm_info->{pm}, $pm_info->{version}, _elide($p5base, $w);
     } else { # for (not found) entries
-        printf "%-${pm_len}s %-10s\n", 
+        printf "%-${pm_len}s %-10s\n", # FIXME: should be %s when $WIDTH = 0
             $pm_info->{pm}, $pm_info->{version};
     }
 }
@@ -154,9 +162,11 @@ which_pm - Perl script to find out which versions of certain Perl modules are in
     -help          brief help message
     -man           full documentation
     -version       prints the version number of this script
+    -include       restricts library paths (defaults to @INC) (also --inc, -I)
 
     -plain         print plain paths (default)
     -p5p           prints p5-paths
+    -width         determines the terminal width (default: 78)
 
 =head1 OPTIONS
 
@@ -193,6 +203,17 @@ For example, in a machine where the Config variable C<installarchlib>
 holds C<"C:\tools\Perl5\lib"> and C<File::Spec> is found at
 C<"c:/tools/Perl5/lib/File/Spec.pm">, the p5-path is
 C<"${installarchlib}/">.
+
+=item B<-include>
+
+When this switch is explicit, the library path is restricted.
+Otherwise, the library path defaults to C<@INC>. This can be
+spelt also as B<--inc> or B<-I>.
+
+=item B<-width>
+
+Determines the terminal width and defaults to 78. To avoid
+truncation, use B<-w 0>.
 
 =back
 

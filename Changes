@@ -1,5 +1,10 @@
 Revision history for Perl extension Module::Which.
 
+0.02_03 Thu Dec  27 2005
+        - new switch -I for specifying the library paths
+        - correspoding changes to Module::Which
+        - new switch -w for specifying terminal width
+
 0.02_02 Thu Dec  8 2005
         - module versions are obtained via MM->parse_file
           after using EE::MM

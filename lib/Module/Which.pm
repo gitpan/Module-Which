@@ -11,7 +11,7 @@ our @ISA = qw(Exporter);
 #our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(which);
 
-our $VERSION = '0.02_02';
+our $VERSION = '0.02_03';
 eval $VERSION;
 
 #print "ENTERING Module::Which\n";
@@ -108,7 +108,7 @@ sub which {
 
         #push @info, pm_info($_, $options) for list_pm_files($pm, recurse => 1);
 
-        my @pm_files = list_pm_files($pm, recurse => 1);
+        my @pm_files = list_pm_files($pm, recurse => 1, include => $options->{include});
         if (@pm_files) {
             push @info, pm_info($_, $options) for @pm_files;
         } else {

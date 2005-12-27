@@ -1,7 +1,7 @@
 ---
 # http://module-build.sourceforge.net/META-spec.html
 name:         Module-Which
-version:      0.02_02
+version:      0.02_03
 version_from: lib/Module/Which.pm
 author:
   - Adriano Ferreira <ferreira@cpan.org>

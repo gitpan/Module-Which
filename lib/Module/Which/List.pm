@@ -10,7 +10,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(list_pm_files);
 
-our $VERSION = '0.01_05';
+our $VERSION = '0.02_03';
 
 use File::Glob qw(bsd_glob);
 #use File::Spec::Functions qw(abs2rel);
@@ -19,106 +19,106 @@ use File::Find qw(find);
 
 # returns a list with no duplicates
 sub uniq {
-	my %h;
-	return grep { ! $h{$_}++ } @_;
+    my %h;
+    return grep { ! $h{$_}++ } @_;
 }
 
 
 # my @files = _plain_list_files('File/*', @INC);
 sub _plain_list_files {
-	my $glob = shift;
-	my @INC = @_;
-	my @files;
-	#push @files, bsd_glob("$_/$glob") for @INC;
-	for my $base (@INC) {
-		#print "bsd_glob($_/$glob)\n";
-		push @files, 
-			 map { { path => $_, rpath => File::Spec::Unix->abs2rel($_, $base), base => $base } }
-		     grep { -e } bsd_glob("$base/$glob")
-	}
+    my $glob = shift;
+    my @INC = @_;
+    my @files;
+    #push @files, bsd_glob("$_/$glob") for @INC;
+    for my $base (@INC) {
+        #print "bsd_glob($_/$glob)\n";
+        push @files, 
+             map { { path => $_, rpath => File::Spec::Unix->abs2rel($_, $base), base => $base } }
+             grep { -e } bsd_glob("$base/$glob")
+    }
 
-	return @files if wantarray;
-	return \@files;
+    return @files if wantarray;
+    return \@files;
 }
 
 # my @files = _deep_list_files('Data/**.pm', @INC)
 sub _deep_list_files {
-	my $glob = shift;
-	my @INC = @_;
+    my $glob = shift;
+    my @INC = @_;
 
-	#print "deep_list_files: ...\n";
+    #print "deep_list_files: ...\n";
 
-	my $root = $glob;
-	$root =~ s/\*\*\.pm$//;
+    my $root = $glob;
+    $root =~ s/\*\*\.pm$//;
 
-	my $base;
-	my @files;
+    my $base;
+    my @files;
 
-	my $wanted = sub {
-		if (/\.pm$/) {
-			push @files, { path => $_, rpath => File::Spec::Unix->abs2rel($_, $base), base => $base };
-		}
-	};
+    my $wanted = sub {
+        if (/\.pm$/) {
+            push @files, { path => $_, rpath => File::Spec::Unix->abs2rel($_, $base), base => $base };
+        }
+    };
 
-	for (@INC) {
-		$base = $_;
-		if (-e "$base/$root" && -d "$base/$root") {
-			find({ wanted => $wanted, no_chdir => 1 }, "$base/$root");
-		}
-	}
+    for (@INC) {
+        $base = $_;
+        if (-e "$base/$root" && -d "$base/$root") {
+            find({ wanted => $wanted, no_chdir => 1 }, "$base/$root");
+        }
+    }
 
-	return @files if wantarray;
-	return \@files;
+    return @files if wantarray;
+    return \@files;
 
 }
 
 sub list_files {
-	my $glob = shift;
-	my %options = @_;
-	my @include;
-	@include = ($options{include}) ? @{$options{include}} : @INC;
-	@include = uniq @include 
-		if exists $options{uniq} ? $options{uniq} : 1; # FIXME: need documentation !!!!
-	#print "include: @include\n";
-	my @files;
-	if ($glob =~ /\*\*\.pm$/) {
-		return _deep_list_files($glob, @include);
-	} else {
-		return _plain_list_files($glob, @include);
-	}
+    my $glob = shift;
+    my %options = @_;
+    my @include;
+    @include = ($options{include}) ? @{$options{include}} : @INC;
+    @include = uniq @include 
+        if exists $options{uniq} ? $options{uniq} : 1; # FIXME: need documentation !!!!
+    #print "include: @include\n";
+    my @files;
+    if ($glob =~ /\*\*\.pm$/) {
+        return _deep_list_files($glob, @include);
+    } else {
+        return _plain_list_files($glob, @include);
+    }
 }
 
 sub file_to_pm {
-	my $rpath = shift;
-	$rpath =~ s|\.pm$||;
-	$rpath =~ s|/|::|g;
-	return $rpath;
+    my $rpath = shift;
+    $rpath =~ s|\.pm$||;
+    $rpath =~ s|/|::|g;
+    return $rpath;
 }
 
 sub list_pm_files {
-	my $pm_glob = shift;
-	my %options = @_;
+    my $pm_glob = shift;
+    my %options = @_;
 
-	my $glob = $pm_glob;
-	$glob =~ s|::$|::*| unless $options{recurse};
-	$glob =~ s|::$|::**| if $options{recurse};
-	$glob =~ s|::|/|g;
-	$glob =~ s|$|.pm|;
-	#print "glob: $glob\n";
+    my $glob = $pm_glob;
+    $glob =~ s|::$|::*| unless $options{recurse};
+    $glob =~ s|::$|::**| if $options{recurse};
+    $glob =~ s|::|/|g;
+    $glob =~ s|$|.pm|;
+    #print "glob: $glob\n";
 
-	my @pm_files = list_files($glob, @_);
-	
-	my @pm;
-	for (@pm_files) {
-		push @pm, { 
-			 pm => file_to_pm($_->{rpath}), 
-			 path => $_->{path}, 
-		     base => $_->{base} 
-		};
-	}
+    my @pm_files = list_files($glob, @_);
+    
+    my @pm;
+    for (@pm_files) {
+        push @pm, { 
+             pm => file_to_pm($_->{rpath}), 
+             path => $_->{path}, 
+             base => $_->{base} 
+        };
+    }
 
-	return @pm if wantarray;
-	return \@pm;
+    return @pm if wantarray;
+    return \@pm;
 
 }
 
@@ -145,26 +145,26 @@ Yes, I know: it is a mess down below. But release early, release often
 (before my breath disappears).
 
 
-	pm_glob => 'File::Which'
-	pm_root => 'File::Which::'
+    pm_glob => 'File::Which'
+    pm_root => 'File::Which::'
 
 
-	list_files($pm_glob, { recurse => '0|1', include => \@INC })
+    list_files($pm_glob, { recurse => '0|1', include => \@INC })
 
-		prefixes - take a look at Module::List
-		pod      - take a look at Module::List
+        prefixes - take a look at Module::List
+        pod      - take a look at Module::List
 
-	list_files('Module::Which')
+    list_files('Module::Which')
 
-	=> [ { pm => 'Module::Which', path => '/usr/lib/perl5/site_perl/5.8/Module/Which.pm' } ]
+    => [ { pm => 'Module::Which', path => '/usr/lib/perl5/site_perl/5.8/Module/Which.pm' } ]
 
-	list_files('Module::')
+    list_files('Module::')
 
-	=> [ 
-		{ pm => 'Module::Build', path => '/usr/lib/perl5/site_perl/5.8/Module/Build.pm' } 
-		{ pm => 'Module::Find', path => '/usr/lib/perl5/site_perl/5.8/Module/Find.pm' }, 
-		{ pm => 'Module::Which', path => '/usr/lib/perl5/site_perl/5.8/Module/Which.pm' } 
-	   ]
+    => [ 
+        { pm => 'Module::Build', path => '/usr/lib/perl5/site_perl/5.8/Module/Build.pm' } 
+        { pm => 'Module::Find', path => '/usr/lib/perl5/site_perl/5.8/Module/Find.pm' }, 
+        { pm => 'Module::Which', path => '/usr/lib/perl5/site_perl/5.8/Module/Which.pm' } 
+       ]
 
 =head1 BUGS
 
