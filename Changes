@@ -1,5 +1,12 @@
 Revision history for Perl extension Module::Which.
 
+0.0204 Sun May 21 2006
+        - Term::Size is recommended
+        - when determining terminal size, non-tty STDOUT
+          prevents truncation
+        - if possible, terminal width is retrieved with
+          the help of Term::Size
+
 0.02_03 Thu Dec  27 2005
         - new switch -I for specifying the library paths
         - correspoding changes to Module::Which

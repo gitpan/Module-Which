@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.02_03';
+our $VERSION = '0.0204';
 
 use Module::Which;
 use Getopt::Long;
@@ -16,8 +16,28 @@ sub print_version {
     exit(0);
 }
 
+# If STDOUT is not a tty, returns 0.
+# Retrieves the terminal width with Term::Size if possible
+# Otherwise, returns 80.
+sub term_width {
+    return 0 unless -t STDOUT;
+    my $t_width;
+    eval { require Term::Size };
+    $t_width = Term::Size::chars() unless $@; 
+    return $t_width || 80
+} 
+
+#sub get_term_width {
+#    return 200 unless -t STDOUT; 
+#    eval { require Term::ReadKey };
+#    return 80 if ($@); 
+#    my @size = Term::ReadKey::GetTerminalSize(*STDOUT);
+#    print "size: @size\n";
+#    return shift @size;
+#}
+
 our $VERBOSE = 0 || $ENV{WHICH_PM_VERBOSE};
-our $WIDTH = 78; # the default terminal width
+our $WIDTH = term_width()-1;
 
 my %which_options;
 %which_options = (
@@ -47,15 +67,6 @@ GetOptions(
 pod2usage(-exitstatus => 1, -verbose => 1) if $which_options{help};
 pod2usage(-exitstatus => 0, -verbose => 2) if $which_options{man};
 print_version if $which_options{version};
-
-#sub get_term_width {
-#    return 200 unless -t STDOUT; 
-#    eval { require Term::ReadKey };
-#    return 80 if ($@); 
-#    my @size = Term::ReadKey::GetTerminalSize(*STDOUT);
-#    print "size: @size\n";
-#    return shift @size;
-#}
 
 sub out_info {
     my $info = shift;
@@ -213,7 +224,7 @@ spelt also as B<--inc> or B<-I>.
 =item B<-width>
 
 Determines the terminal width and defaults to 78. To avoid
-truncation, use B<-w 0>.
+truncation, use B<-w 0>. # OUTDATED
 
 =back
 

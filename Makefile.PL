@@ -7,9 +7,9 @@ if ($] < 5.006) {
     use lib qw(inc);
     use Module::Downgrade;
     downgrade('lib/Module/Which.pm', 
-		      'lib/Module/Which/List.pm', 
-		      'lib/Data/Hash/Transform.pm', 
-		      'bin/which_pm');
+              'lib/Module/Which/List.pm', 
+              'lib/Data/Hash/Transform.pm', 
+              'bin/which_pm');
 }
 
 WriteMakefile(

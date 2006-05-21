@@ -10,7 +10,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(list_pm_files);
 
-our $VERSION = '0.02_03';
+our $VERSION = '0.0204';
 
 use File::Glob qw(bsd_glob);
 #use File::Spec::Functions qw(abs2rel);

@@ -10,7 +10,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(path_to_p5path path_to_p5 p5path_to_path);
 
-our $VERSION = '0.01_05';
+our $VERSION = '0.0204';
 
 use Config;
 require File::Spec::Unix; # qw(splitdir catdir);
