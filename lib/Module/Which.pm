@@ -11,7 +11,7 @@ our @ISA = qw(Exporter);
 #our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(which);
 
-our $VERSION = '0.0204';
+our $VERSION = '0.0205';
 eval $VERSION;
 
 #print "ENTERING Module::Which\n";
@@ -99,7 +99,7 @@ sub hashify (\@$) {
 sub which {
     my $options = {};
     $options = pop @_ if ref $_[-1];
-    $options->{return} = 'ARRAY' unless $options->{return};
+    $options->{return} = 'HASH' unless $options->{return};
 
     my @pm = @_;
 

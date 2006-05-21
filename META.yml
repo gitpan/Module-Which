@@ -1,7 +1,7 @@
 ---
 # http://module-build.sourceforge.net/META-spec.html
 name:         Module-Which
-version:      0.0204
+version:      0.0205
 version_from: lib/Module/Which.pm
 author:
   - Adriano Ferreira <ferreira@cpan.org>
@@ -13,8 +13,8 @@ requires:
     File::Find:                    0
     File::Spec::Unix:              0
     File::Glob:                    0
-    String::Truncate               0
-    ExtUtils::MakeMaker            0
+    String::Truncate:              0
+    ExtUtils::MakeMaker:           0
 recommends:
     Test::Pod:                     1.18
     Term::Size:                    0

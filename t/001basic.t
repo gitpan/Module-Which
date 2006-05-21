@@ -5,9 +5,9 @@ BEGIN { use_ok('Module::Which') };
 my @pm = qw(A X A::AA A::AB);
 
 use lib qw(t/tlib);
-my $info = which(@pm);
+my $info = which(@pm, { return => 'ARRAY' });
 
-use YAML;
+#use YAML;
 #diag(YAML::Dump $info);
 
 is_deeply($info,  [ 

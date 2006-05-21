@@ -5,7 +5,7 @@ README
 
 t/001basic.t
 t/002hash.t                              Tests Data::Hash::Transform
-t/003pod.t                               Tests POD for errors
+t/099pod.t                               Tests POD for errors
 t/tlib/A.pm                              Mock module for helping test
 t/tlib/A/AA.pm                           id
 t/tlib/A/AB.pm                           id

@@ -1,5 +1,11 @@
 Revision history for Perl extension Module::Which.
 
+0.0205 ?
+        - CPAN RT #16332: Jeff Tanner noticed that the
+          synopsis code didn't work. Indeed, &which
+          was using "return => 'ARRAY'" as default
+          instead of "return => 'HASH'" - fixed
+
 0.0204 Sun May 21 2006
         - Term::Size is recommended
         - when determining terminal size, non-tty STDOUT
