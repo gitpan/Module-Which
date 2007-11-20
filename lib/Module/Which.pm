@@ -11,7 +11,7 @@ our @ISA = qw(Exporter);
 #our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 our @EXPORT = qw(which);
 
-our $VERSION = '0.0205';
+our $VERSION = '0.0206';
 eval $VERSION;
 
 #print "ENTERING Module::Which\n";
@@ -174,7 +174,7 @@ or better the one-liner
 =item B<which>
 
   my $info = which(@pm)
-  my $info = which(@pm, { return => 'HASH', verbose => 1 }
+  my $info = which(@pm, { return => 'ARRAY', verbose => 1 }
 
 Returns an array ref with information about the modules specified 
 (by name or '::*' patterns). This information is a hash ref which
@@ -192,9 +192,9 @@ If the 'require' statement failed, 'version' is 'unknown'.
 A hash ref of options can be given as the last argument.
 The option C<return> can take one of the values: 'ARRAY', 'HASH',
 'HASH(FIRST)', 'HASH(MULTI)', 'HASH(LIST)'.
-'ARRAY' is the default and means to return an array ref.
+'HASH' is the default and means to return a hash ref.
 'HASH' forces the return of a hash ref where the module name
-is used as key. 
+is used as key. 'ARRAY' is used to get an array ref.
 
 The different strategies for returning a hash are different 
 only if the same module is found twice or more times
@@ -255,7 +255,7 @@ Adriano R. Ferreira, E<lt>ferreira@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005 by Adriano R. Ferreira
+Copyright (C) 2005-2007 by Adriano R. Ferreira
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

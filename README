@@ -1,4 +1,4 @@
-Module-Which version 0.0205
+Module-Which version 0.0206
 ===========================
 
 'Module::Which' is the basis of the script 'which_pm' intented
@@ -19,7 +19,7 @@ Renz was used.
 
 Well, all that said, this module is no more than automating:
 
-  perl -MInteresting::Module -e 'print $Interesting::Module'
+  perl -MInteresting::Module -e 'print $Interesting::Module::VERSION'
 
 or better the one-liner
 
@@ -86,7 +86,7 @@ TO DO
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2005 by Adriano R. Ferreira
+Copyright (C) 2005-2007 by Adriano R. Ferreira
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
