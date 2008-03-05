@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.0204';
+our $VERSION = '0.0207';
 
 use Module::Which;
 use Getopt::Long;
@@ -17,13 +17,13 @@ sub print_version {
 }
 
 # If STDOUT is not a tty, returns 0.
-# Retrieves the terminal width with Term::Size if possible
+# Retrieves the terminal width with Term::Size::Any if possible
 # Otherwise, returns 80.
 sub term_width {
     return 0 unless -t STDOUT;
     my $t_width;
-    eval { require Term::Size };
-    $t_width = Term::Size::chars() unless $@; 
+    eval { require Term::Size::Any; Term::Size::Any->import() };
+    $t_width = Term::Size::Any::chars() unless $@; 
     return $t_width || 80
 } 
 

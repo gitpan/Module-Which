@@ -42,7 +42,7 @@ WriteMakefile(
 
 recommends:
     Test::Pod:                     1.18
-    Term::Size:                    0
+    Term::Size::Any:               0
 no_index:
     file:
         - inc/Module/Downgrade.pm

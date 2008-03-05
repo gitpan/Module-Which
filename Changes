@@ -1,5 +1,11 @@
 Revision history for Perl extension Module::Which.
 
+0.0207 Wed Mar  3 2008
+        - mention Module::Finder in SEE ALSO
+        - recommends Term::Size::Any instead of Term::Size
+        - hacked up support for "which_pm perl"
+        - TODO: document that "which_pm perl" works
+
 0.0206 Tue Nov 11 2007
         - no code change
         - fixed packaging issues

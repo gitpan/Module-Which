@@ -6,12 +6,10 @@ use warnings;
 
 require Exporter;
 
-our @ISA = qw(Exporter);
-#our %EXPORT_TAGS = ( 'all' => [ qw() ] );
-#our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
-our @EXPORT = qw(which);
+our @ISA = qw( Exporter );
+our @EXPORT = qw( which );
 
-our $VERSION = '0.0206';
+our $VERSION = '0.0207';
 eval $VERSION;
 
 #print "ENTERING Module::Which\n";
@@ -105,6 +103,17 @@ sub which {
 
     my @info;
     for my $pm (@pm) {
+
+        # special case: 'perl'
+        if ( $pm eq 'perl' ) { 
+            push @info, { 
+                pm => 'perl', 
+                version => sprintf("%vd", $^V), #$],
+                path => $^X,
+                base => '', # XXX ?!
+             };
+             next;
+        }
 
         #push @info, pm_info($_, $options) for list_pm_files($pm, recurse => 1);
 
@@ -227,6 +236,7 @@ After releasing it into CPAN, I found
     Module::Info
     Module::List
     Module::Locate
+    Module::Finder
 
 Module::InstalledVersion has a different approach (it does not run 
 the modules to find
