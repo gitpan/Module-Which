@@ -4,8 +4,6 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.0207';
-
 use Module::Which;
 use Getopt::Long;
 use Pod::Usage;

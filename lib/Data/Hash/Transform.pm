@@ -1,6 +1,6 @@
 
 package Data::Hash::Transform;
-
+$Data::Hash::Transform::VERSION = '0.03';
 use 5.006;
 use strict;
 use warnings;
@@ -8,8 +8,6 @@ use warnings;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(hash_f hash_l hash_m hash_a hash_em);
-
-our $VERSION = '0.0204';
 
 use Carp qw(croak);
 

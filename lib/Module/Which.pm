@@ -1,5 +1,5 @@
 package Module::Which;
-
+$Module::Which::VERSION = '0.03';
 use 5.006;
 use strict;
 use warnings;
@@ -8,11 +8,6 @@ require Exporter;
 
 our @ISA = qw( Exporter );
 our @EXPORT = qw( which );
-
-our $VERSION = '0.0207';
-eval $VERSION;
-
-#print "ENTERING Module::Which\n";
 
 #use Module::Find;
 use Module::Which::List qw(list_pm_files);
@@ -66,9 +61,9 @@ sub pm_info {
 
     return { 
         version => $version, 
-        pm => $pm->{pm}, 
-        path => $pm->{path}, 
-        base => $pm->{base}  
+        pm      => $pm->{pm}, 
+        path    => $pm->{path}, 
+        base    => $pm->{base}  
     };
 }
 
@@ -141,20 +136,38 @@ __END__
 
 =head1 NAME
 
-Module::Which - Finds out which version of Perl modules are installed
+Module::Which - find version and path of locally installed modules
 
 =head1 SYNOPSIS
 
-  use Module::Which;
-  my $info = which('Module::Which', 'YAML', 'XML::', 'DBI', 'DBD::');
-  while (my ($mod, $info) = each %$info) {
-      print "$mod: $info->{version}\n"; 
+  use Module::Which qw/ which /;
+
+  my $result = which('Module::Which', 'YAML', 'XML::', 'DBI', 'DBD::');
+  while (my ($module, $info) = each %$result) {
+      print "$module:\n":
+      print "  version: $info->{version}\n" if $info->{version};
+      print "     path: $info->{path}\n"    if $info->{path}; 
+  }
+
+Or you can request an array ref instead of a hash ref:
+
+  my $result = which('strict', 'YAML', {return => 'ARRAY'});
+
+  foreach my $info (@$result) {
+      print "$info->{pm}:\n":
+      print "  version: $info->{version}\n" if $info->{version};
+      print "     path: $info->{path}\n"    if $info->{path}; 
   }
 
 =head1 DESCRIPTION
 
-C<Module::Which> is the basis of the script C<which_pm> intented
-to show which version of a Perl module is installed (if it is there at all).
+C<Module::Which> provides the C<which()> function, which takes
+the name of one or more modules, and returns information about
+those modules if they're intalled locally, including the version
+and the path.
+
+C<Module::Which> is the basis of the script C<which_pm> which
+displays the retrieved information to STDOUT.
 
 Modules are searched by name (like 'YAML') or by subcategories
 ('DBD::' means all modules under the DBD subdirectories of
@@ -189,8 +202,15 @@ Returns an array ref with information about the modules specified
 (by name or '::*' patterns). This information is a hash ref which
 actually contains:
 
-   pm: (the name of the Perl module)
-   version: (the installed version)
+=over 4
+
+=item * pm: the name of the Perl module
+
+=item * version: the installed version
+
+=item * path: the full path to the Perl module
+
+=back
 
 The version is the one found by accessing the scalar variable C<$VERSION> 
 of the package, after a I<require> statement.
@@ -258,6 +278,10 @@ the version is the one of the first file.
 =back
 
 Please report bugs via CPAN RT L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Which>.
+
+=head1 REPOSITORY
+
+L<https://github.com/neilbowers/Module-Which>
 
 =head1 AUTHOR
 

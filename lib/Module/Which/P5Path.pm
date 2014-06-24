@@ -1,6 +1,6 @@
 
 package Module::Which::P5Path;
-
+$Module::Which::P5Path::VERSION = '0.03';
 use 5.006;
 use strict;
 use warnings;
@@ -9,8 +9,6 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(path_to_p5path path_to_p5 p5path_to_path);
-
-our $VERSION = '0.0204';
 
 use Config;
 require File::Spec::Unix; # qw(splitdir catdir);
