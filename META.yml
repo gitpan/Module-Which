@@ -33,4 +33,4 @@ requires:
 resources:
   homepage: https://github.com/neilbowers/Module-Which
   repository: https://github.com/neilbowers/Module-Which.git
-version: '0.03'
+version: '0.04'

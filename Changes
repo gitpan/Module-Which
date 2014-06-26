@@ -1,5 +1,9 @@
 Revision history for Perl module Module::Which
 
+0.04 2014-06-26 NEILB
+    - bin/which_pm didn't have a $VERSION, which was causing a warning.
+      It now uses the $VERSION from Module::Which. Thanks to FERREIRA :-)
+
 0.03 2014-06-24 NEILB
     - Fixed the SYNOPSIS to show working code, and the two types of result
       data you can get from which(). RT#16332

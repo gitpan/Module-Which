@@ -10,7 +10,7 @@ use Pod::Usage;
 
 sub print_version {
     use File::Basename qw(basename);
-    print "This is ", basename($0), ", $VERSION\n";
+    print "This is ", basename($0), ", $Module::Which::VERSION\n";
     exit(0);
 }
 

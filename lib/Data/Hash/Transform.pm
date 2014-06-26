@@ -1,6 +1,6 @@
 
 package Data::Hash::Transform;
-$Data::Hash::Transform::VERSION = '0.03';
+$Data::Hash::Transform::VERSION = '0.04';
 use 5.006;
 use strict;
 use warnings;

@@ -1,5 +1,5 @@
 package Module::Which;
-$Module::Which::VERSION = '0.03';
+$Module::Which::VERSION = '0.04';
 use 5.006;
 use strict;
 use warnings;

@@ -1,6 +1,6 @@
 
 package Module::Which::List;
-$Module::Which::List::VERSION = '0.03';
+$Module::Which::List::VERSION = '0.04';
 use 5.006;
 use strict;
 use warnings;
